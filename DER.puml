@@ -3,172 +3,184 @@ hide circle
 skinparam linetype ortho
 
 entity Agencia {
-  age_nro_agencia : <<PK>>
+  age_nro_agencia : int <<PK>>
   --
-  age_descripcion
-  age_direccion
-  age_telefono
-  age_mail
-  age_localidad
-  age_provincia
+  age_descripcion nvarchar(255)
+  age_direccion nvarchar(255)
+  age_telefono nvarchar(50)
+  age_mail nvarchar(255)
+  age_localidad nvarchar(255)
+  age_provincia nvarchar(255)
 }
 
 entity Cliente {
-  cli_id : <<PK>>
+  cli_id : bigint <<PK>>
   --
-  cli_dni
-  cli_nombre
-  cli_apellido
-  cli_fecha_nacimiento
-  cli_mail
-  cli_telefono
-  cli_direccion
-  cli_localidad
-  cli_provincia
+  cli_dni : nvarchar(20)
+  cli_nombre : nvarchar(255)
+  cli_apellido : nvarchar(255)
+  cli_fecha_nacimiento : date
+  cli_mail : nvarchar(255)
+  cli_telefono : nvarchar(50)
+  cli_direccion : nvarchar(255)
+  cli_localidad : nvarchar(255)
+  cli_provincia : nvarchar(255)
 }
 
 entity Agente {
-  agt_legajo : <<PK>>
+  agt_legajo : bigint <<PK>>
   --
-  agt_agencia : <<FK>>
-  agt_dni
-  agt_nombre
-  agt_apellido
-  agt_fecha_nacimiento
-  agt_mail
-  agt_telefono
-  agt_direccion
-  agt_localidad
-  agt_provincia
+  agt_agencia : int <<FK>>
+  agt_dni : nvarchar(20)
+  agt_nombre : nvarchar(255)
+  agt_apellido : nvarchar(255)
+  agt_fecha_nacimiento : date
+  agt_mail : nvarchar(255)
+  agt_telefono : nvarchar(50)
+  agt_direccion : nvarchar(255)
+  agt_localidad : nvarchar(255)
+  agt_provincia : nvarchar(255)
+}
+
+entity CanalVenta {
+  cdv_id : int <<PK>>
+  --
+  cdv_descripcion : nvarchar(255)
+}
+
+entity MedioPago {
+  mdp_id : int <<PK>>
+  --
+  mdp_descripcion : nvarchar(255)
 }
 
 entity Aerolinea {
-  aero_codigo : <<PK>>
+  aero_codigo : nvarchar(10) <<PK>>
   --
-  aero_nombre
-  aero_pais
-  aero_alianza
+  aero_nombre : nvarchar(255)
+  aero_pais : nvarchar(255)
+  aero_alianza : nvarchar(255)
 }
 
 entity Aeropuerto {
-  aer_codigo : <<PK>>
+  aer_codigo : nvarchar(10) <<PK>>
   --
-  aer_descripcion
-  aer_ciudad
-  aer_pais
+  aer_descripcion : nvarchar(255)
+  aer_ciudad : nvarchar(255)
+  aer_pais : nvarchar(255)
 }
 
 entity Vuelo {
-  vue_id : <<PK>>
+  vue_id : bigint <<PK>>
   --
-  vue_aerolinea : <<FK>>
-  vue_aeropuerto_llegada : <<FK>>
-  vue_aeropuerto_salida : <<FK>>
-  vue_fecha_salida
-  vue_fecha_llegada
-  vue_hora_salida
-  vue_hora_llegada
-  vue_incluye_carry
-  vue_incluye_valija
-  vue_duracion
+  vue_aerolinea : nvarchar(10) <<FK>>
+  vue_aeropuerto_llegada : nvarchar(10) <<FK>>
+  vue_aeropuerto_salida : nvarchar(10) <<FK>>
+  vue_fecha_salida : date
+  vue_fecha_llegada : date
+  vue_hora_salida : time
+  vue_hora_llegada : time
+  vue_incluye_carry : bit
+  vue_incluye_valija : bit
+  vue_duracion : int
 }
 
 entity Hospedaje {
-  hos_id : <<PK>>
+  hos_id : bigint <<PK>>
   --
-  hos_nombre
-  hos_direccion
-  hos_horario_checkin
-  hos_horario_checkout
-  hos_ciudad
-  hos_pais
-  hos_incluye_desayuno
+  hos_nombre : nvarchar(255)
+  hos_direccion : nvarchar(255)
+  hos_horario_checkin : time
+  hos_horario_checkout : time
+  hos_ciudad : nvarchar(255)
+  hos_pais : nvarchar(255)
+  hos_incluye_desayuno : bit
 }
 
 entity Tipo_de_habitacion {
-  tdp_id : <<PK>>
+  tdp_id : bigint <<PK>>
   --
-  tdp_descripcion
-  tdp_nombre
-  tdp_precio_noche
-  tdp_hospedaje : <<FK>>
+  tdp_descripcion : nvarchar(255)
+  tdp_cant_camas : int
+  tdp_precio_base : decimal(18,2)
+  tdp_hospedaje : : bigint <<FK>>
 }
 
 entity Proveedor_Excursion {
-  pre_id : <<PK>>
+  pre_id : bigint <<PK>>
   --
-  pre_nombre
-  pre_mail
-  pre_telefono
+  pre_nombre : nvarchar(255)
+  pre_mail : nvarchar(255)
+  pre_telefono : nvarchar(50)
 }
 
 entity Excursion {
-  exc_id : <<PK>>
+  exc_id : bigint <<PK>>
   --
-  exc_proveedor : <<FK>>
-  exc_nombre
-  exc_descripcion
-  exc_duracion
-  exc_horario
-  exc_precio
-  exc_ciudad
+  exc_proveedor : bigint <<FK>>
+  exc_nombre : nvarchar(255)
+  exc_descripcion : nvarchar(max)
+  exc_duracion : int
+  exc_horario : time
+  exc_precio : decimal(18,2)
+  exc_ciudad : nvarchar(255)
 }
 
 entity Venta {
-  ven_nro_venta : <<PK>>
+  ven_nro_venta : bigint <<PK>>
   --
-  ven_agencia : <<FK>>
-  ven_cli : <<FK>>
-  ven_agente : <<FK>>
-  ven_cdv
-  ven_medio_pago
-  ven_fecha
-  ven_subtotal
-  ven_descuento
-  ven_total
-  ven_propuesta : <<FK>>
+  ven_agencia : int <<FK>>
+  ven_cli : bigint <<FK>>
+  ven_agente : bigint <<FK>>
+  ven_cdv : int <<FK>>
+  ven_medio_pago : int <<FK>>
+  ven_fecha : date 
+  ven_subtotal : decimal(18,2)
+  ven_descuento : decimal(18,2)
+  ven_total : decimal(18,2)
+  ven_propuesta : bigint <<FK>>
 }
 
 entity Venta_Vuelo {
-  vv_id : <<PK>>
+  vv_id : bigint <<PK>>
   --
-  vv_venta : <<FK>>
-  vv_vuelo : <<FK>>
-  vv_cant_pasaje
-  vv_precio
-  vv_subtotal
-  vv_codigo_reserva
+  vv_venta : bigint <<FK>>
+  vv_vuelo : bigint <<FK>>
+  vv_cant_pasaje : int
+  vv_precio : decimal(18,2)
+  vv_subtotal : decimal(18,2) 
+  vv_codigo_reserva : nvarchar(255)
 }
 
 entity Venta_Hospedaje {
-  vh_id : PK
+  vh_id : bigint <<PK>>
   --
-  vh_venta : <<FK>>
-  vh_tipo_habitacion : <<FK>>
-  vh_fecha_desde
-  vh_fecha_hasta
-  vh_cantidad
-  vh_precio
-  vh_subtotal
-  vh_codigo_reserva
-}
+  vh_venta : bigint <<FK>>
+  vh_tipo_habitacion : bigint <<FK>>
+  vh_fecha_desde : date
+  vh_fecha_hasta : date
+  vh_cantidad : int
+  vh_precio : decimal(18,2)
+  vh_subtotal : decimal(18,2)
+  vh_codigo_reserva : nvarchar(255)
+} 
 
 entity Venta_Excursion {
-  ve_id : <<PK>>
+  ve_id : bigint <<PK>>
   --
-  ve_venta : <<FK>>
-  ve_excursion : <<FK>>
-  ve_fecha
-  ve_cantidad
-  ve_precio
-  ve_subtotal
-  ve_codigo_reserva
+  ve_venta : bigint <<FK>>
+  ve_excursion : bigint <<FK>>
+  ve_fecha : date
+  ve_cantidad : int
+  ve_precio : decimal(18,2)
+  ve_subtotal : decimal(18,2)
+  ve_codigo_reserva : nvarchar(255)
 }
 
 entity Solicitud_Cotizacion {
   sol_nro : bigint <<PK>>
   --
-  sol_cliente : nvarchar(255) <<FK>>
+  sol_cliente : bigint <<FK>>
   sol_agente : bigint <<FK>>
   sol_fecha_solicitud : date
   sol_fecha_inicio : date
@@ -249,6 +261,13 @@ entity Valoracion_Encuesta {
   val_puntaje : int
 }
 
+entity Ciudad {
+  ciu_id : bigint <<PK>>
+  --
+  ciu_nombre : nvarchar(255)
+  ciu_pais : nvarchar(255)
+}
+
 Agencia ||--o{ Agente
 Agencia ||--o{ Venta
 
@@ -293,6 +312,8 @@ Aspecto_Encuesta ||--o{ Valoracion_Encuesta
 
 Venta ||--o{ Encuesta
 Propuesta ||--o{ Encuesta
+
+Ciudad ||--o{ Detalle_Solicitud
 
 
 @enduml
