@@ -55,19 +55,18 @@ entity MedioPago {
 }
 
 entity Aerolinea {
-  aero_codigo : <<PK>>
+  aero_id : <<PK>>
   --
   aero_nombre
-  aero_pais
-  aero_alianza
 }
 
 entity Aeropuerto {
-  aer_codigo : <<PK>>
+  id_aeropuerto : <<PK>>
   --
-  aer_descripcion
-  aer_ciudad
-  aer_pais
+  codigo
+  nombre
+  ciudad
+  pais
 }
 
 entity Vuelo {
@@ -174,87 +173,87 @@ entity Venta_Excursion {
 }
 
 entity Solicitud_Cotizacion {
-  sol_nro : <<PK>>
+  sol_nro : bigint <<PK>>
   --
-  sol_cliente : <<FK>>
-  sol_agente : <<FK>>
-  sol_fecha_solicitud
-  sol_fecha_inicio
-  sol_fecha_fin
-  sol_cant_pasajeros
-  sol_presupuesto
-  sol_observaciones
+  sol_cliente : nvarchar(255) <<FK>>
+  sol_agente : bigint <<FK>>
+  sol_fecha_solicitud : date
+  sol_fecha_inicio : date
+  sol_fecha_fin : date
+  sol_cant_pasajeros: int
+  sol_presupuesto : decimal(18,2)
+  sol_observaciones : nvarchar(max)
 }
 
 entity Detalle_Solicitud {
-  ds_id : <<PK>>
+  ds_id : bigint <<PK>>
   --
-  ds_solicitud : <<FK>>
-  ds_ciudad : <<FK>>
-  ds_cant_dias
-  ds_observaciones
+  ds_solicitud : bigint <<FK>>
+  ds_ciudad : bigint <<FK>>
+  ds_cant_dias : int
+  ds_observaciones : nvarchar(max)
 }
 
 entity Propuesta {
-  prop_nro_propuesta : <<PK>>
+  prop_nro_propuesta : bigint <<PK>>
   --
-  prop_solicitud : <<FK>>
-  prop_agente : <<FK>>
-  prop_estado
-  prop_fecha
-  prop_vigencia
-  prop_fecha_desde
-  prop_fecha_hasta
-  prop_subtotal
-  prop_descuento
-  prop_total
+  prop_solicitud : bigint <<FK>>
+  prop_agente : bigint <<FK>>
+  prop_estado : nvarchar(255)
+  prop_fecha : date
+  prop_vigencia : date
+  prop_fecha_desde : date
+  prop_fecha_hasta : date
+  prop_subtotal : decimal(18,2)
+  prop_descuento : decimal(18,2)
+  prop_total : decimal(18,2)
 }
 
 entity Propuesta_Vuelo {
-  pv_id : <<PK>>
+  pv_id : bigint <<PK>>
   --
-  pv_propuesta : <<FK>>
-  pv_vuelo : <<FK>>
-  pv_cantidad
-  pv_precio
-  pv_subtotal
+  pv_propuesta : bigint <<FK>>
+  pv_vuelo : bigint <<FK>>
+  pv_cantidad : int
+  pv_precio : decimal(18,2)
+  pv_subtotal : decimal(18,2)
 }
   
 entity Propuesta_Hospedaje {
-  ph_id : <<PK>>
+  ph_id : bigint <<PK>>
   --
-  ph_propuesta : <<FK>>
-  ph_tipo_habitacion : <<FK>>
-  ph_fecha_desde
-  ph_fecha_hasta
-  ph_cant_habitaciones
-  ph_precio
-  ph_subtotal
+  ph_propuesta : bigint <<FK>>
+  ph_tipo_habitacion : int <<FK>>
+  ph_fecha_desde : date
+  ph_fecha_hasta : date
+  ph_cant_habitaciones : int
+  ph_precio : decimal(18,2)
+  ph_subtotal : decimal(18,2)
 }
 
 entity Encuesta {
-  enc_id : <<PK>>
+  enc_id : bigint <<PK>>
   --
-  enc_cliente : <<FK>>
-  enc_agente : <<FK>>
-  enc_venta : <<FK>>
-  enc_propuesta : <<FK>>
-  enc_fecha
-  enc_comentario
+  enc_cliente : bigint <<FK>>
+  enc_agente : bigint <<FK>>
+  enc_venta : bigint <<FK>>
+  enc_propuesta : bigint <<FK>>
+  enc_fecha : date
+  enc_comentario : nvarchar(max)
 }
 
 entity Aspecto_Encuesta {
-  asp_id : <<PK>>
+  asp_id : bigint <<PK>>
   --
-  asp_descripcion
+  asp_descripcion : nvarchar(255)
 }
 
 entity Valoracion_Encuesta {
-  val_id : <<PK>>
+  val_id : bigint <<PK>>
   --
-  val_encuesta : <<FK>>
-  val_aspecto : <<FK>>
-  val_puntaje
+  val_encuesta : bigint <<FK>>
+  val_aspecto : bigint <<FK>>
+  val_puntaje : int
 }
 
 Agencia ||--o{ Agente
