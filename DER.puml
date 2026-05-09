@@ -291,6 +291,8 @@ Proveedor_Excursion ||--o{ Excursion
 Venta ||--o{ Venta_Vuelo
 Venta ||--o{ Venta_Hospedaje
 Venta ||--o{ Venta_Excursion
+Venta ||--|| MedioPago 
+Venta ||--|| CanalVenta
 
 Vuelo ||--o{ Venta_Vuelo
 Tipo_de_habitacion ||--o{ Venta_Hospedaje
@@ -314,6 +316,4 @@ Venta ||--o{ Encuesta
 Propuesta ||--o{ Encuesta
 
 Ciudad ||--o{ Detalle_Solicitud
-
-
 @enduml
