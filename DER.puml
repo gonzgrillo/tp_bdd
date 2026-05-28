@@ -2,19 +2,52 @@
 hide circle
 skinparam linetype ortho
 
+
+entity Pais {
+  pai_id : int <<PK>>
+  --
+  pai_nombre : nvarchar(255)
+}
+
+entity Provincia {
+  pro_id : int <<PK>>
+  --
+  pro_pais : int <<FK>>
+  pro_nombre : nvarchar(255)
+}
+
+entity Localidad {
+  loc_id : bigint <<PK>>
+  --
+  loc_provincia : int <<FK>>
+  loc_nombre : nvarchar(255)
+}
+
+entity Alianza {
+  ali_id : int <<PK>>
+  --
+  ali_descripcion : nvarchar(255)
+}
+
+entity Estado_Propuesta {
+  esp_id : int <<PK>>
+  --
+  esp_descripcion : nvarchar(255)
+}
+
 entity Agencia {
   age_nro_agencia : int <<PK>>
+  age_localidad : bigint <<FK>>
   --
   age_descripcion nvarchar(255)
   age_direccion nvarchar(255)
   age_telefono nvarchar(50)
   age_mail nvarchar(255)
-  age_localidad nvarchar(255)
-  age_provincia nvarchar(255)
 }
 
 entity Cliente {
   cli_id : bigint <<PK>>
+  cli_localidad : bigint <<FK>>
   --
   cli_dni : nvarchar(20)
   cli_nombre : nvarchar(255)
@@ -23,12 +56,11 @@ entity Cliente {
   cli_mail : nvarchar(255)
   cli_telefono : nvarchar(50)
   cli_direccion : nvarchar(255)
-  cli_localidad : nvarchar(255)
-  cli_provincia : nvarchar(255)
 }
 
 entity Agente {
   agt_legajo : bigint <<PK>>
+  agt_localidad : bigint <<FK>>
   --
   agt_agencia : int <<FK>>
   agt_dni : nvarchar(20)
@@ -38,8 +70,6 @@ entity Agente {
   agt_mail : nvarchar(255)
   agt_telefono : nvarchar(50)
   agt_direccion : nvarchar(255)
-  agt_localidad : nvarchar(255)
-  agt_provincia : nvarchar(255)
 }
 
 entity CanalVenta {
@@ -58,16 +88,15 @@ entity Aerolinea {
   aero_codigo : nvarchar(10) <<PK>>
   --
   aero_nombre : nvarchar(255)
-  aero_pais : nvarchar(255)
-  aero_alianza : nvarchar(255)
+  aero_pais : int <<FK>>
+  aero_alianza : int <<FK>>
 }
 
 entity Aeropuerto {
   aer_codigo : nvarchar(10) <<PK>>
   --
   aer_descripcion : nvarchar(255)
-  aer_ciudad : nvarchar(255)
-  aer_pais : nvarchar(255)
+  aer_ciudad : bigint <<FK>>
 }
 
 entity Vuelo {
@@ -92,8 +121,7 @@ entity Hospedaje {
   hos_direccion : nvarchar(255)
   hos_horario_checkin : time
   hos_horario_checkout : time
-  hos_ciudad : nvarchar(255)
-  hos_pais : nvarchar(255)
+  hos_ciudad : bigint <<FK>>
   hos_incluye_desayuno : bit
 }
 
@@ -123,13 +151,12 @@ entity Excursion {
   exc_duracion : int
   exc_horario : time
   exc_precio : decimal(18,2)
-  exc_ciudad : nvarchar(255)
+  exc_ciudad : bigint <<FK>>
 }
 
 entity Venta {
   ven_nro_venta : bigint <<PK>>
   --
-  ven_agencia : int <<FK>>
   ven_cli : bigint <<FK>>
   ven_agente : bigint <<FK>>
   ven_cdv : int <<FK>>
@@ -138,7 +165,6 @@ entity Venta {
   ven_subtotal : decimal(18,2)
   ven_descuento : decimal(18,2)
   ven_total : decimal(18,2)
-  ven_propuesta : bigint <<FK>>
 }
 
 entity Venta_Vuelo {
@@ -204,7 +230,7 @@ entity Propuesta {
   --
   prop_solicitud : bigint <<FK>>
   prop_agente : bigint <<FK>>
-  prop_estado : nvarchar(255)
+  prop_estado : int <<FK>>
   prop_fecha : date
   prop_vigencia : date
   prop_fecha_desde : date
@@ -241,10 +267,10 @@ entity Encuesta {
   --
   enc_cliente : bigint <<FK>>
   enc_agente : bigint <<FK>>
-  enc_venta : bigint <<FK>>
-  enc_propuesta : bigint <<FK>>
   enc_fecha : date
   enc_comentario : nvarchar(max)
+  enc_venta     : bigint <<FK>>
+  enc_solicitud : bigint <<FK>>
 }
 
 entity Aspecto_Encuesta {
@@ -265,11 +291,10 @@ entity Ciudad {
   ciu_id : bigint <<PK>>
   --
   ciu_nombre : nvarchar(255)
-  ciu_pais : nvarchar(255)
+  ciu_provincia : nvarchar(255)
 }
 
 Agencia ||--o{ Agente
-Agencia ||--o{ Venta
 
 Cliente ||--o{ Venta
 Cliente ||--o{ Solicitud_Cotizacion
@@ -307,13 +332,32 @@ Propuesta ||--o{ Propuesta_Hospedaje
 Vuelo ||--o{ Propuesta_Vuelo
 Tipo_de_habitacion ||--o{ Propuesta_Hospedaje
 
-Propuesta ||--o{ Venta
-
 Encuesta ||--o{ Valoracion_Encuesta
 Aspecto_Encuesta ||--o{ Valoracion_Encuesta
 
-Venta ||--o{ Encuesta
-Propuesta ||--o{ Encuesta
-
 Ciudad ||--o{ Detalle_Solicitud
+
+Pais ||--o{ Provincia
+
+Provincia ||--o{ Localidad
+Provincia ||--o{ Ciudad
+
+Localidad ||--o{ Agencia
+Localidad ||--o{ Cliente
+Localidad ||--o{ Agente
+
+Pais ||--o{ Aerolinea
+
+Alianza ||--o{ Aerolinea
+
+Ciudad ||--o{ Aeropuerto
+Ciudad ||--o{ Hospedaje
+Ciudad ||--o{ Excursion
+
+Estado_Propuesta ||--o{ Propuesta
+
+Venta ||--o{ Encuesta
+Solicitud_Cotizacion ||--o{ Encuesta
+
+
 @enduml
