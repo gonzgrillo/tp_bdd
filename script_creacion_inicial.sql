@@ -84,7 +84,7 @@ CREATE TABLE LOS_JOINEROS.Ciudad (
 GO
 
 CREATE TABLE LOS_JOINEROS.Agencia (
- age_nro_agencia int NOT NULL,
+ age_nro_agencia bigint NOT NULL,
  age_localidad int NOT NULL,
  age_direccion nvarchar(255) NULL,
  age_telefono nvarchar(255) NULL,
@@ -95,8 +95,8 @@ CREATE TABLE LOS_JOINEROS.Agencia (
 GO
 
 CREATE TABLE LOS_JOINEROS.Agente (
- agt_legajo int NOT NULL,
- agt_agencia int NOT NULL,
+ agt_legajo bigint NOT NULL,
+ agt_agencia bigint NOT NULL,
  agt_localidad int NOT NULL,
  agt_dni nvarchar(255) NOT NULL,
  agt_nombre nvarchar(255) NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE LOS_JOINEROS.Cliente (
 GO
 
 CREATE TABLE LOS_JOINEROS.Aerolinea (
- aero_codigo nvarchar(10) NOT NULL,
+ aero_codigo nvarchar(255) NOT NULL,
  aero_pais int NOT NULL,
  aero_alianza int NULL,
  aero_nombre nvarchar(255) NOT NULL,
@@ -140,7 +140,7 @@ GO
 CREATE TABLE LOS_JOINEROS.Aeropuerto (
  aer_codigo nvarchar(10) NOT NULL,
  aer_ciudad int NOT NULL,
- aer_descripcion nvarchar(255) NOT NULL,
+ aer_descripcion nvarchar(200) NOT NULL,
  CONSTRAINT PK_Aeropuerto PRIMARY KEY (aer_codigo),
  CONSTRAINT FK_Aeropuerto_Ciudad FOREIGN KEY (aer_ciudad) REFERENCES LOS_JOINEROS.Ciudad (ciu_id)
 );
@@ -148,7 +148,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Vuelo (
  vue_id int IDENTITY(1,1) NOT NULL,
- vue_aerolinea nvarchar(10) NOT NULL,
+ vue_aerolinea nvarchar(255) NOT NULL,
  vue_aeropuerto_salida nvarchar(10) NOT NULL,
  vue_aeropuerto_llegada nvarchar(10) NOT NULL,
  vue_fecha_salida date NOT NULL,
@@ -181,7 +181,7 @@ GO
 CREATE TABLE LOS_JOINEROS.Tipo_Habitacion (
  tdh_id int IDENTITY(1,1) NOT NULL,
  tdh_hospedaje int NOT NULL,
- tdh_descripcion nvarchar(255) NOT NULL,
+ tdh_descripcion nvarchar(max) NOT NULL,
  tdh_cant_camas int NULL,
  tdh_precio_base decimal(18,2) NOT NULL,
  CONSTRAINT PK_Tipo_Habitacion PRIMARY KEY (tdh_id),
@@ -214,9 +214,9 @@ CREATE TABLE LOS_JOINEROS.Excursion (
 GO
 
 CREATE TABLE LOS_JOINEROS.Solicitud_Cotizacion (
- sol_nro int NOT NULL,
+ sol_nro bigint NOT NULL,
  sol_cliente int NOT NULL,
- sol_agente int NOT NULL,
+ sol_agente bigint NOT NULL,
  sol_fecha_solicitud date NOT NULL,
  sol_fecha_inicio_tentativa date NULL,
  sol_fecha_fin_tentativa date NULL,
@@ -231,7 +231,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Detalle_Solicitud (
  ds_id int IDENTITY(1,1) NOT NULL,
- ds_solicitud int NOT NULL,
+ ds_solicitud bigint NOT NULL,
  ds_ciudad int NOT NULL,
  ds_cant_dias int NULL,
  ds_observaciones nvarchar(max) NULL,
@@ -242,9 +242,9 @@ CREATE TABLE LOS_JOINEROS.Detalle_Solicitud (
 GO
 
 CREATE TABLE LOS_JOINEROS.Propuesta (
- prop_nro_propuesta int NOT NULL,
- prop_solicitud int NOT NULL,
- prop_agente int NOT NULL,
+ prop_nro_propuesta bigint NOT NULL,
+ prop_solicitud bigint NOT NULL,
+ prop_agente bigint NOT NULL,
  prop_estado int NOT NULL,
  prop_fecha date NOT NULL,
  prop_vigencia date NULL,
@@ -262,7 +262,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Propuesta_Vuelo (
  pv_id int IDENTITY(1,1) NOT NULL,
- pv_propuesta int NOT NULL,
+ pv_propuesta bigint NOT NULL,
  pv_vuelo int NOT NULL,
  pv_cantidad int NOT NULL,
  pv_precio decimal(18,2) NOT NULL,
@@ -275,7 +275,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Propuesta_Hospedaje (
  ph_id int IDENTITY(1,1) NOT NULL,
- ph_propuesta int NOT NULL,
+ ph_propuesta bigint NOT NULL,
  ph_tipo_habitacion int NOT NULL,
  ph_fecha_desde date NULL,
  ph_fecha_hasta date NULL,
@@ -289,12 +289,12 @@ CREATE TABLE LOS_JOINEROS.Propuesta_Hospedaje (
 GO
 
 CREATE TABLE LOS_JOINEROS.Venta (
- ven_nro_venta int NOT NULL,
+ ven_nro_venta bigint NOT NULL,
  ven_cliente int NOT NULL,
- ven_agente int NOT NULL,
+ ven_agente bigint NOT NULL,
  ven_canal_venta int NOT NULL,
  ven_medio_pago int NOT NULL,
- ven_propuesta int NULL,
+ ven_propuesta bigint NULL,
  ven_fecha date NOT NULL,
  ven_subtotal decimal(18,2) NULL,
  ven_descuento decimal(18,2) NULL DEFAULT 0,
@@ -310,7 +310,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Venta_Vuelo (
  vv_id int IDENTITY(1,1) NOT NULL,
- vv_venta int NOT NULL,
+ vv_venta bigint NOT NULL,
  vv_vuelo int NOT NULL,
  vv_cant_pasajes int NOT NULL,
  vv_precio decimal(18,2) NOT NULL,
@@ -324,7 +324,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Venta_Hospedaje (
  vh_id int IDENTITY(1,1) NOT NULL,
- vh_venta int NOT NULL,
+ vh_venta bigint NOT NULL,
  vh_tipo_habitacion int NOT NULL,
  vh_fecha_desde date NULL,
  vh_fecha_hasta date NULL,
@@ -340,7 +340,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Venta_Excursion (
  ve_id int IDENTITY(1,1) NOT NULL,
- ve_venta int NOT NULL,
+ ve_venta bigint NOT NULL,
  ve_excursion int NOT NULL,
  ve_fecha date NULL,
  ve_cantidad int NOT NULL,
@@ -354,11 +354,11 @@ CREATE TABLE LOS_JOINEROS.Venta_Excursion (
 GO
 
 CREATE TABLE LOS_JOINEROS.Encuesta (
- enc_id int NOT NULL,
+ enc_id bigint NOT NULL,
  enc_cliente int NOT NULL,
- enc_agente int NOT NULL,
- enc_venta int NULL,
- enc_solicitud int NULL,
+ enc_agente bigint NOT NULL,
+ enc_venta bigint NULL,
+ enc_solicitud bigint NULL,
  enc_fecha date NOT NULL,
  enc_comentario nvarchar(max) NULL,
  CONSTRAINT PK_Encuesta PRIMARY KEY (enc_id),
@@ -375,7 +375,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Valoracion_Encuesta (
  val_id int IDENTITY(1,1) NOT NULL,
- val_encuesta int NOT NULL,
+ val_encuesta bigint NOT NULL,
  val_aspecto int NOT NULL,
  val_puntaje int NOT NULL,
  CONSTRAINT PK_Valoracion_Encuesta PRIMARY KEY (val_id),
