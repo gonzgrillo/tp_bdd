@@ -586,11 +586,22 @@ AS
 BEGIN
  SET NOCOUNT ON;
  INSERT INTO LOS_JOINEROS.Agente (agt_legajo, agt_agencia, agt_localidad, agt_dni, agt_nombre, agt_apellido, agt_fecha_nacimiento, agt_mail, agt_telefono, agt_direccion)
- SELECT DISTINCT m.Agente_Legajo, m.Agencia_Nro_Agencia, l.loc_id, m.Agente_Dni, m.Agente_Nombre, m.Agente_Apellido, m.Agente_Fecha_Nac, m.Agente_Mail, m.Agente_Telefono, m.Agente_Direccion
+ SELECT
+  m.Agente_Legajo,
+  MIN(m.Agencia_Nro_Agencia),
+  MIN(l.loc_id),
+  MIN(m.Agente_Dni),
+  MIN(m.Agente_Nombre),
+  MIN(m.Agente_Apellido),
+  MIN(m.Agente_Fecha_Nac),
+  MIN(m.Agente_Mail),
+  MIN(m.Agente_Telefono),
+  MIN(m.Agente_Direccion)
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Provincia pr ON pr.pro_nombre = m.Agente_Provincia
  INNER JOIN LOS_JOINEROS.Localidad l ON l.loc_nombre = m.Agente_Localidad AND l.loc_provincia = pr.pro_id
- WHERE m.Agente_Legajo IS NOT NULL;
+ WHERE m.Agente_Legajo IS NOT NULL
+ GROUP BY m.Agente_Legajo;
 END;
 GO
 
