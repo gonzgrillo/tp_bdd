@@ -84,7 +84,7 @@ CREATE TABLE LOS_JOINEROS.Ciudad (
 GO
 
 CREATE TABLE LOS_JOINEROS.Agencia (
- age_nro_agencia int NOT NULL,
+ age_nro_agencia bigint NOT NULL,
  age_localidad int NOT NULL,
  age_direccion nvarchar(255) NULL,
  age_telefono nvarchar(255) NULL,
@@ -95,8 +95,8 @@ CREATE TABLE LOS_JOINEROS.Agencia (
 GO
 
 CREATE TABLE LOS_JOINEROS.Agente (
- agt_legajo int NOT NULL,
- agt_agencia int NOT NULL,
+ agt_legajo bigint NOT NULL,
+ agt_agencia bigint NOT NULL,
  agt_localidad int NOT NULL,
  agt_dni nvarchar(255) NOT NULL,
  agt_nombre nvarchar(255) NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE LOS_JOINEROS.Cliente (
 GO
 
 CREATE TABLE LOS_JOINEROS.Aerolinea (
- aero_codigo nvarchar(10) NOT NULL,
+ aero_codigo nvarchar(255) NOT NULL,
  aero_pais int NOT NULL,
  aero_alianza int NULL,
  aero_nombre nvarchar(255) NOT NULL,
@@ -140,7 +140,7 @@ GO
 CREATE TABLE LOS_JOINEROS.Aeropuerto (
  aer_codigo nvarchar(10) NOT NULL,
  aer_ciudad int NOT NULL,
- aer_descripcion nvarchar(255) NOT NULL,
+ aer_descripcion nvarchar(200) NOT NULL,
  CONSTRAINT PK_Aeropuerto PRIMARY KEY (aer_codigo),
  CONSTRAINT FK_Aeropuerto_Ciudad FOREIGN KEY (aer_ciudad) REFERENCES LOS_JOINEROS.Ciudad (ciu_id)
 );
@@ -148,7 +148,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Vuelo (
  vue_id int IDENTITY(1,1) NOT NULL,
- vue_aerolinea nvarchar(10) NOT NULL,
+ vue_aerolinea nvarchar(255) NOT NULL,
  vue_aeropuerto_salida nvarchar(10) NOT NULL,
  vue_aeropuerto_llegada nvarchar(10) NOT NULL,
  vue_fecha_salida date NOT NULL,
@@ -156,6 +156,7 @@ CREATE TABLE LOS_JOINEROS.Vuelo (
  vue_fecha_llegada date NOT NULL,
  vue_hora_llegada nvarchar(50) NULL,
  vue_duracion int NULL,
+ vue_precio decimal(18,2) NULL,
  vue_incluye_carry bit NOT NULL DEFAULT 0,
  vue_incluye_valija bit NOT NULL DEFAULT 0,
  CONSTRAINT PK_Vuelo PRIMARY KEY (vue_id),
@@ -181,8 +182,8 @@ GO
 CREATE TABLE LOS_JOINEROS.Tipo_Habitacion (
  tdh_id int IDENTITY(1,1) NOT NULL,
  tdh_hospedaje int NOT NULL,
- tdh_descripcion nvarchar(255) NOT NULL,
- tdh_cant_camas int NULL,
+ tdh_nombre nvarchar(255) NOT NULL,
+ tdh_descripcion nvarchar(max) NULL,
  tdh_precio_base decimal(18,2) NOT NULL,
  CONSTRAINT PK_Tipo_Habitacion PRIMARY KEY (tdh_id),
  CONSTRAINT FK_TipoHabitacion_Hospedaje FOREIGN KEY (tdh_hospedaje) REFERENCES LOS_JOINEROS.Hospedaje (hos_id)
@@ -201,7 +202,7 @@ GO
 CREATE TABLE LOS_JOINEROS.Excursion (
  exc_id int IDENTITY(1,1) NOT NULL,
  exc_proveedor int NOT NULL,
- exc_ciudad int NOT NULL,
+ exc_ciudad int NULL,
  exc_nombre nvarchar(255) NOT NULL,
  exc_descripcion nvarchar(max) NULL,
  exc_duracion int NULL,
@@ -214,9 +215,9 @@ CREATE TABLE LOS_JOINEROS.Excursion (
 GO
 
 CREATE TABLE LOS_JOINEROS.Solicitud_Cotizacion (
- sol_nro int NOT NULL,
+ sol_nro bigint NOT NULL,
  sol_cliente int NOT NULL,
- sol_agente int NOT NULL,
+ sol_agente bigint NOT NULL,
  sol_fecha_solicitud date NOT NULL,
  sol_fecha_inicio_tentativa date NULL,
  sol_fecha_fin_tentativa date NULL,
@@ -231,7 +232,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Detalle_Solicitud (
  ds_id int IDENTITY(1,1) NOT NULL,
- ds_solicitud int NOT NULL,
+ ds_solicitud bigint NOT NULL,
  ds_ciudad int NOT NULL,
  ds_cant_dias int NULL,
  ds_observaciones nvarchar(max) NULL,
@@ -242,9 +243,9 @@ CREATE TABLE LOS_JOINEROS.Detalle_Solicitud (
 GO
 
 CREATE TABLE LOS_JOINEROS.Propuesta (
- prop_nro_propuesta int NOT NULL,
- prop_solicitud int NOT NULL,
- prop_agente int NOT NULL,
+ prop_nro_propuesta bigint NOT NULL,
+ prop_solicitud bigint NOT NULL,
+ prop_agente bigint NOT NULL,
  prop_estado int NOT NULL,
  prop_fecha date NOT NULL,
  prop_vigencia date NULL,
@@ -262,7 +263,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Propuesta_Vuelo (
  pv_id int IDENTITY(1,1) NOT NULL,
- pv_propuesta int NOT NULL,
+ pv_propuesta bigint NOT NULL,
  pv_vuelo int NOT NULL,
  pv_cantidad int NOT NULL,
  pv_precio decimal(18,2) NOT NULL,
@@ -275,7 +276,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Propuesta_Hospedaje (
  ph_id int IDENTITY(1,1) NOT NULL,
- ph_propuesta int NOT NULL,
+ ph_propuesta bigint NOT NULL,
  ph_tipo_habitacion int NOT NULL,
  ph_fecha_desde date NULL,
  ph_fecha_hasta date NULL,
@@ -289,12 +290,12 @@ CREATE TABLE LOS_JOINEROS.Propuesta_Hospedaje (
 GO
 
 CREATE TABLE LOS_JOINEROS.Venta (
- ven_nro_venta int NOT NULL,
+ ven_nro_venta bigint NOT NULL,
  ven_cliente int NOT NULL,
- ven_agente int NOT NULL,
+ ven_agente bigint NOT NULL,
  ven_canal_venta int NOT NULL,
  ven_medio_pago int NOT NULL,
- ven_propuesta int NULL,
+ ven_propuesta bigint NULL,
  ven_fecha date NOT NULL,
  ven_subtotal decimal(18,2) NULL,
  ven_descuento decimal(18,2) NULL DEFAULT 0,
@@ -310,7 +311,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Venta_Vuelo (
  vv_id int IDENTITY(1,1) NOT NULL,
- vv_venta int NOT NULL,
+ vv_venta bigint NOT NULL,
  vv_vuelo int NOT NULL,
  vv_cant_pasajes int NOT NULL,
  vv_precio decimal(18,2) NOT NULL,
@@ -324,7 +325,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Venta_Hospedaje (
  vh_id int IDENTITY(1,1) NOT NULL,
- vh_venta int NOT NULL,
+ vh_venta bigint NOT NULL,
  vh_tipo_habitacion int NOT NULL,
  vh_fecha_desde date NULL,
  vh_fecha_hasta date NULL,
@@ -340,7 +341,7 @@ GO
 
 CREATE TABLE LOS_JOINEROS.Venta_Excursion (
  ve_id int IDENTITY(1,1) NOT NULL,
- ve_venta int NOT NULL,
+ ve_venta bigint NOT NULL,
  ve_excursion int NOT NULL,
  ve_fecha date NULL,
  ve_cantidad int NOT NULL,
@@ -354,28 +355,24 @@ CREATE TABLE LOS_JOINEROS.Venta_Excursion (
 GO
 
 CREATE TABLE LOS_JOINEROS.Encuesta (
- enc_id int NOT NULL,
+ enc_id bigint NOT NULL,
  enc_cliente int NOT NULL,
- enc_agente int NOT NULL,
- enc_venta int NULL,
- enc_solicitud int NULL,
+ enc_agente bigint NOT NULL,
+ enc_venta bigint NULL,
+ enc_solicitud bigint NULL,
  enc_fecha date NOT NULL,
  enc_comentario nvarchar(max) NULL,
  CONSTRAINT PK_Encuesta PRIMARY KEY (enc_id),
  CONSTRAINT FK_Encuesta_Cliente FOREIGN KEY (enc_cliente) REFERENCES LOS_JOINEROS.Cliente (cli_id),
  CONSTRAINT FK_Encuesta_Agente FOREIGN KEY (enc_agente) REFERENCES LOS_JOINEROS.Agente (agt_legajo),
  CONSTRAINT FK_Encuesta_Venta FOREIGN KEY (enc_venta) REFERENCES LOS_JOINEROS.Venta (ven_nro_venta),
- CONSTRAINT FK_Encuesta_Solicitud FOREIGN KEY (enc_solicitud) REFERENCES LOS_JOINEROS.Solicitud_Cotizacion (sol_nro),
- CONSTRAINT CK_Encuesta_Origen CHECK (
-  (enc_venta IS NOT NULL AND enc_solicitud IS NULL) OR
-  (enc_venta IS NULL AND enc_solicitud IS NOT NULL)
- )
+ CONSTRAINT FK_Encuesta_Solicitud FOREIGN KEY (enc_solicitud) REFERENCES LOS_JOINEROS.Solicitud_Cotizacion (sol_nro)
 );
 GO
 
 CREATE TABLE LOS_JOINEROS.Valoracion_Encuesta (
  val_id int IDENTITY(1,1) NOT NULL,
- val_encuesta int NOT NULL,
+ val_encuesta bigint NOT NULL,
  val_aspecto int NOT NULL,
  val_puntaje int NOT NULL,
  CONSTRAINT PK_Valoracion_Encuesta PRIMARY KEY (val_id),
@@ -645,8 +642,8 @@ CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_MIGRACION_TABLA_VUELO
 AS
 BEGIN
  SET NOCOUNT ON;
- INSERT INTO LOS_JOINEROS.Vuelo (vue_aerolinea, vue_aeropuerto_salida, vue_aeropuerto_llegada, vue_fecha_salida, vue_hora_salida, vue_fecha_llegada, vue_hora_llegada, vue_duracion, vue_incluye_carry, vue_incluye_valija)
- SELECT DISTINCT m.Aerolinea_Codigo, m.Aeropuerto_Salida_Codigo, m.Aeropuerto_Llegada_Codigo, m.Vuelo_Fecha_Salida, m.Vuelo_Horario_Salida, m.Vuelo_Fecha_Llegada, m.Vuelo_Horario_Llegada, m.Vuelo_Duracion, ISNULL(m.Vuelo_Incluye_Carry, 0), ISNULL(m.Vuelo_Incluye_Valija, 0)
+ INSERT INTO LOS_JOINEROS.Vuelo (vue_aerolinea, vue_aeropuerto_salida, vue_aeropuerto_llegada, vue_fecha_salida, vue_hora_salida, vue_fecha_llegada, vue_hora_llegada, vue_duracion, vue_precio, vue_incluye_carry, vue_incluye_valija)
+ SELECT DISTINCT m.Aerolinea_Codigo, m.Aeropuerto_Salida_Codigo, m.Aeropuerto_Llegada_Codigo, m.Vuelo_Fecha_Salida, m.Vuelo_Horario_Salida, m.Vuelo_Fecha_Llegada, m.Vuelo_Horario_Llegada, m.Vuelo_Duracion, m.Vuelo_Precio, ISNULL(m.Vuelo_Incluye_Carry, 0), ISNULL(m.Vuelo_Incluye_Valija, 0)
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Aerolinea ae ON ae.aero_codigo = m.Aerolinea_Codigo
  INNER JOIN LOS_JOINEROS.Aeropuerto aps ON aps.aer_codigo = m.Aeropuerto_Salida_Codigo
@@ -683,8 +680,8 @@ CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_MIGRACION_TABLA_TIPO_HABITACION
 AS
 BEGIN
  SET NOCOUNT ON;
- INSERT INTO LOS_JOINEROS.Tipo_Habitacion (tdh_hospedaje, tdh_descripcion, tdh_cant_camas, tdh_precio_base)
- SELECT DISTINCT h.hos_id, m.Habitacion_Nombre, NULL, m.Habitacion_Precio_Noche
+ INSERT INTO LOS_JOINEROS.Tipo_Habitacion (tdh_hospedaje, tdh_nombre, tdh_descripcion, tdh_precio_base)
+ SELECT DISTINCT h.hos_id, m.Habitacion_Nombre, m.Habitacion_Descripcion, m.Habitacion_Precio_Noche
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Hospedaje h ON h.hos_nombre = m.Hospedaje_Nombre
  WHERE m.Habitacion_Nombre IS NOT NULL;
@@ -696,11 +693,9 @@ AS
 BEGIN
  SET NOCOUNT ON;
  INSERT INTO LOS_JOINEROS.Excursion (exc_proveedor, exc_ciudad, exc_nombre, exc_descripcion, exc_duracion, exc_horario, exc_precio)
- SELECT DISTINCT p.pre_id, c.ciu_id, m.Excursion_Nombre, m.Excursion_Descripcion, m.Excursion_Duracion, m.Excursion_Horario, m.Excursion_Precio
+ SELECT DISTINCT p.pre_id, NULL, m.Excursion_Nombre, m.Excursion_Descripcion, m.Excursion_Duracion, m.Excursion_Horario, m.Excursion_Precio
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Proveedor_Excursion p ON p.pre_nombre = m.Proveedor_Nombre
- INNER JOIN LOS_JOINEROS.Pais pai ON pai.pai_nombre = m.Hospedaje_Pais
- INNER JOIN LOS_JOINEROS.Ciudad c ON c.ciu_nombre = m.Hospedaje_Ciudad AND c.ciu_pais = pai.pai_id
  WHERE m.Excursion_Nombre IS NOT NULL;
 END;
 GO
@@ -791,7 +786,7 @@ BEGIN
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Propuesta p ON p.prop_nro_propuesta = m.Propuesta_Nro_Propuesta
  INNER JOIN LOS_JOINEROS.Hospedaje h ON h.hos_nombre = m.Hospedaje_Nombre
- INNER JOIN LOS_JOINEROS.Tipo_Habitacion t ON t.tdh_hospedaje = h.hos_id AND t.tdh_descripcion = m.Habitacion_Nombre
+ INNER JOIN LOS_JOINEROS.Tipo_Habitacion t ON t.tdh_hospedaje = h.hos_id AND t.tdh_nombre = m.Habitacion_Nombre
  WHERE m.Detalle_Propuesta_Hospedaje_Cant IS NOT NULL;
 END;
 GO
@@ -848,7 +843,7 @@ BEGIN
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Venta vn ON vn.ven_nro_venta = m.Venta_Nro_Venta
  INNER JOIN LOS_JOINEROS.Hospedaje h ON h.hos_nombre = m.Hospedaje_Nombre
- INNER JOIN LOS_JOINEROS.Tipo_Habitacion t ON t.tdh_hospedaje = h.hos_id AND t.tdh_descripcion = m.Habitacion_Nombre
+ INNER JOIN LOS_JOINEROS.Tipo_Habitacion t ON t.tdh_hospedaje = h.hos_id AND t.tdh_nombre = m.Habitacion_Nombre
  WHERE m.Detalle_Venta_Hospedaje_Cantidad IS NOT NULL;
 END;
 GO
@@ -874,35 +869,14 @@ BEGIN
  SELECT m.Encuesta_Codigo_Encuesta,
   MIN(c.cli_id),
   MIN(m.Agente_Legajo),
-  MIN(m.Venta_Nro_Venta),
+  NULL,
   NULL,
   MIN(m.Encuesta_Fecha_Encuesta),
   MIN(m.Encuesta_Comentarios)
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Cliente c ON c.cli_dni = m.Cliente_Dni
  INNER JOIN LOS_JOINEROS.Agente a ON a.agt_legajo = m.Agente_Legajo
- INNER JOIN LOS_JOINEROS.Venta v ON v.ven_nro_venta = m.Venta_Nro_Venta
  WHERE m.Encuesta_Codigo_Encuesta IS NOT NULL
- AND m.Venta_Nro_Venta IS NOT NULL
- AND m.Solicitud_Nro_Solicitud IS NULL
- GROUP BY m.Encuesta_Codigo_Encuesta;
-
- INSERT INTO LOS_JOINEROS.Encuesta (enc_id, enc_cliente, enc_agente, enc_venta, enc_solicitud, enc_fecha, enc_comentario)
- SELECT m.Encuesta_Codigo_Encuesta,
-  MIN(c.cli_id),
-  MIN(m.Agente_Legajo),
-  NULL,
-  MIN(m.Solicitud_Nro_Solicitud),
-  MIN(m.Encuesta_Fecha_Encuesta),
-  MIN(m.Encuesta_Comentarios)
- FROM gd_esquema.Maestra m
- INNER JOIN LOS_JOINEROS.Cliente c ON c.cli_dni = m.Cliente_Dni
- INNER JOIN LOS_JOINEROS.Agente a ON a.agt_legajo = m.Agente_Legajo
- INNER JOIN LOS_JOINEROS.Solicitud_Cotizacion s ON s.sol_nro = m.Solicitud_Nro_Solicitud
- WHERE m.Encuesta_Codigo_Encuesta IS NOT NULL
- AND m.Solicitud_Nro_Solicitud IS NOT NULL
- AND m.Venta_Nro_Venta IS NULL
- AND NOT EXISTS (SELECT 1 FROM LOS_JOINEROS.Encuesta e WHERE e.enc_id = m.Encuesta_Codigo_Encuesta)
  GROUP BY m.Encuesta_Codigo_Encuesta;
 END;
 GO
