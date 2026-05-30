@@ -4,64 +4,64 @@ hide circle
 skinparam linetype ortho
 
 entity Pais {
-  pai_id : int <<PK>>
+  pai_id : int <<PK, IDENTITY>>
   --
   pai_nombre : nvarchar(255)
 }
 
 entity Provincia {
-  pro_id : int <<PK>>
+  pro_id : int <<PK, IDENTITY>>
   --
   pro_pais : int <<FK>>
   pro_nombre : nvarchar(255)
 }
 
 entity Localidad {
-  loc_id : int <<PK>>
+  loc_id : int <<PK, IDENTITY>>
   --
   loc_provincia : int <<FK>>
   loc_nombre : nvarchar(255)
 }
 
 entity Ciudad {
-  ciu_id : int <<PK>>
+  ciu_id : int <<PK, IDENTITY>>
   --
-  ciu_provincia : int <<FK>>
+  ciu_pais : int <<FK>>
   ciu_nombre : nvarchar(255)
 }
 
 entity Alianza {
-  ali_id : int <<PK>>
+  ali_id : int <<PK, IDENTITY>>
   --
   ali_descripcion : nvarchar(255)
 }
 
 entity Estado_Propuesta {
-  esp_id : int <<PK>>
+  esp_id : int <<PK, IDENTITY>>
   --
   esp_descripcion : nvarchar(255)
 }
 
 entity CanalVenta {
-  cdv_id : int <<PK>>
+  cdv_id : int <<PK, IDENTITY>>
   --
   cdv_descripcion : nvarchar(255)
 }
 
 entity MedioPago {
-  mdp_id : int <<PK>>
+  mdp_id : int <<PK, IDENTITY>>
   --
   mdp_descripcion : nvarchar(255)
 }
 
 entity Aspecto_Encuesta {
-  asp_id : int <<PK>>
+  asp_id : int <<PK, IDENTITY>>
   --
   asp_descripcion : nvarchar(255)
 }
 
 entity Agencia {
-  age_nro_agencia : int <<PK>>
+  age_nro_agencia : bigint <<PK>>
   --
   age_localidad : int <<FK>>
   age_direccion : nvarchar(255)
@@ -70,9 +70,9 @@ entity Agencia {
 }
 
 entity Agente {
-  agt_legajo : int <<PK>>
+  agt_legajo : bigint <<PK>>
   --
-  agt_agencia : int <<FK>>
+  agt_agencia : bigint <<FK>>
   agt_localidad : int <<FK>>
   agt_dni : nvarchar(255)
   agt_nombre : nvarchar(255)
@@ -97,7 +97,7 @@ entity Cliente {
 }
 
 entity Aerolinea {
-  aero_codigo : nvarchar(10) <<PK>>
+  aero_codigo : nvarchar(255) <<PK>>
   --
   aero_pais : int <<FK>>
   aero_alianza : int <<FK>>
@@ -108,13 +108,13 @@ entity Aeropuerto {
   aer_codigo : nvarchar(10) <<PK>>
   --
   aer_ciudad : int <<FK>>
-  aer_descripcion : nvarchar(255)
+  aer_descripcion : nvarchar(200)
 }
 
 entity Vuelo {
   vue_id : int <<PK, IDENTITY>>
   --
-  vue_aerolinea : nvarchar(10) <<FK>>
+  vue_aerolinea : nvarchar(255) <<FK>>
   vue_aeropuerto_salida : nvarchar(10) <<FK>>
   vue_aeropuerto_llegada : nvarchar(10) <<FK>>
   vue_fecha_salida : date
@@ -160,7 +160,7 @@ entity Excursion {
   exc_id : int <<PK, IDENTITY>>
   --
   exc_proveedor : int <<FK>>
-  exc_ciudad : int <<FK>>
+  exc_ciudad : int <<FK, nullable>>
   exc_nombre : nvarchar(255)
   exc_descripcion : nvarchar(max)
   exc_duracion : int
@@ -169,13 +169,13 @@ entity Excursion {
 }
 
 entity Venta {
-  ven_nro_venta : int <<PK>>
+  ven_nro_venta : bigint <<PK>>
   --
   ven_cliente : int <<FK>>
-  ven_agente : int <<FK>>
+  ven_agente : bigint <<FK>>
   ven_canal_venta : int <<FK>>
   ven_medio_pago : int <<FK>>
-  ven_propuesta : int <<FK, nullable>>
+  ven_propuesta : bigint <<FK, nullable>>
   ven_fecha : date
   ven_subtotal : decimal(18,2)
   ven_descuento : decimal(18,2)
@@ -185,7 +185,7 @@ entity Venta {
 entity Venta_Vuelo {
   vv_id : int <<PK, IDENTITY>>
   --
-  vv_venta : int <<FK>>
+  vv_venta : bigint <<FK>>
   vv_vuelo : int <<FK>>
   vv_cant_pasajes : int
   vv_precio : decimal(18,2)
@@ -196,7 +196,7 @@ entity Venta_Vuelo {
 entity Venta_Hospedaje {
   vh_id : int <<PK, IDENTITY>>
   --
-  vh_venta : int <<FK>>
+  vh_venta : bigint <<FK>>
   vh_tipo_habitacion : int <<FK>>
   vh_fecha_desde : date
   vh_fecha_hasta : date
@@ -209,7 +209,7 @@ entity Venta_Hospedaje {
 entity Venta_Excursion {
   ve_id : int <<PK, IDENTITY>>
   --
-  ve_venta : int <<FK>>
+  ve_venta : bigint <<FK>>
   ve_excursion : int <<FK>>
   ve_fecha : date
   ve_cantidad : int
@@ -219,10 +219,10 @@ entity Venta_Excursion {
 }
 
 entity Solicitud_Cotizacion {
-  sol_nro : int <<PK>>
+  sol_nro : bigint <<PK>>
   --
   sol_cliente : int <<FK>>
-  sol_agente : int <<FK>>
+  sol_agente : bigint <<FK>>
   sol_fecha_solicitud : date
   sol_fecha_inicio_tentativa : date
   sol_fecha_fin_tentativa : date
@@ -234,17 +234,17 @@ entity Solicitud_Cotizacion {
 entity Detalle_Solicitud {
   ds_id : int <<PK, IDENTITY>>
   --
-  ds_solicitud : int <<FK>>
+  ds_solicitud : bigint <<FK>>
   ds_ciudad : int <<FK>>
   ds_cant_dias : int
   ds_observaciones : nvarchar(max)
 }
 
 entity Propuesta {
-  prop_nro_propuesta : int <<PK>>
+  prop_nro_propuesta : bigint <<PK>>
   --
-  prop_solicitud : int <<FK>>
-  prop_agente : int <<FK>>
+  prop_solicitud : bigint <<FK>>
+  prop_agente : bigint <<FK>>
   prop_estado : int <<FK>>
   prop_fecha : date
   prop_vigencia : date
@@ -258,7 +258,7 @@ entity Propuesta {
 entity Propuesta_Vuelo {
   pv_id : int <<PK, IDENTITY>>
   --
-  pv_propuesta : int <<FK>>
+  pv_propuesta : bigint <<FK>>
   pv_vuelo : int <<FK>>
   pv_cantidad : int
   pv_precio : decimal(18,2)
@@ -268,7 +268,7 @@ entity Propuesta_Vuelo {
 entity Propuesta_Hospedaje {
   ph_id : int <<PK, IDENTITY>>
   --
-  ph_propuesta : int <<FK>>
+  ph_propuesta : bigint <<FK>>
   ph_tipo_habitacion : int <<FK>>
   ph_fecha_desde : date
   ph_fecha_hasta : date
@@ -278,12 +278,12 @@ entity Propuesta_Hospedaje {
 }
 
 entity Encuesta {
-  enc_id : int <<PK>>
+  enc_id : bigint <<PK>>
   --
   enc_cliente : int <<FK>>
-  enc_agente : int <<FK>>
-  enc_venta : int <<FK, nullable>>
-  enc_solicitud : int <<FK, nullable>>
+  enc_agente : bigint <<FK>>
+  enc_venta : bigint <<FK, nullable>>
+  enc_solicitud : bigint <<FK, nullable>>
   enc_fecha : date
   enc_comentario : nvarchar(max)
 }
@@ -291,7 +291,7 @@ entity Encuesta {
 entity Valoracion_Encuesta {
   val_id : int <<PK, IDENTITY>>
   --
-  val_encuesta : int <<FK>>
+  val_encuesta : bigint <<FK>>
   val_aspecto : int <<FK>>
   val_puntaje : int
 }
@@ -299,7 +299,7 @@ entity Valoracion_Encuesta {
 ' --- Geografia ---
 Pais ||--o{ Provincia
 Provincia ||--o{ Localidad
-Provincia ||--o{ Ciudad
+Pais ||--o{ Ciudad
 
 ' --- Localidad a personas/org ---
 Localidad ||--o{ Agencia
@@ -313,7 +313,7 @@ Alianza ||--o{ Aerolinea
 ' --- Ciudad a productos turisticos ---
 Ciudad ||--o{ Aeropuerto
 Ciudad ||--o{ Hospedaje
-Ciudad ||--o{ Excursion
+Ciudad |o--o{ Excursion
 Ciudad ||--o{ Detalle_Solicitud
 
 ' --- Agencia / Agente ---
