@@ -156,6 +156,7 @@ CREATE TABLE LOS_JOINEROS.Vuelo (
  vue_fecha_llegada date NOT NULL,
  vue_hora_llegada nvarchar(50) NULL,
  vue_duracion int NULL,
+ vue_precio decimal(18,2) NULL,
  vue_incluye_carry bit NOT NULL DEFAULT 0,
  vue_incluye_valija bit NOT NULL DEFAULT 0,
  CONSTRAINT PK_Vuelo PRIMARY KEY (vue_id),
@@ -181,6 +182,7 @@ GO
 CREATE TABLE LOS_JOINEROS.Tipo_Habitacion (
  tdh_id int IDENTITY(1,1) NOT NULL,
  tdh_hospedaje int NOT NULL,
+ tdh_nombre nvarchar(255) NOT NULL,
  tdh_descripcion nvarchar(max) NOT NULL,
  tdh_cant_camas int NULL,
  tdh_precio_base decimal(18,2) NOT NULL,
@@ -645,8 +647,8 @@ CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_MIGRACION_TABLA_VUELO
 AS
 BEGIN
  SET NOCOUNT ON;
- INSERT INTO LOS_JOINEROS.Vuelo (vue_aerolinea, vue_aeropuerto_salida, vue_aeropuerto_llegada, vue_fecha_salida, vue_hora_salida, vue_fecha_llegada, vue_hora_llegada, vue_duracion, vue_incluye_carry, vue_incluye_valija)
- SELECT DISTINCT m.Aerolinea_Codigo, m.Aeropuerto_Salida_Codigo, m.Aeropuerto_Llegada_Codigo, m.Vuelo_Fecha_Salida, m.Vuelo_Horario_Salida, m.Vuelo_Fecha_Llegada, m.Vuelo_Horario_Llegada, m.Vuelo_Duracion, ISNULL(m.Vuelo_Incluye_Carry, 0), ISNULL(m.Vuelo_Incluye_Valija, 0)
+ INSERT INTO LOS_JOINEROS.Vuelo (vue_aerolinea, vue_aeropuerto_salida, vue_aeropuerto_llegada, vue_fecha_salida, vue_hora_salida, vue_fecha_llegada, vue_hora_llegada, vue_duracion, vue_precio, vue_incluye_carry, vue_incluye_valija)
+ SELECT DISTINCT m.Aerolinea_Codigo, m.Aeropuerto_Salida_Codigo, m.Aeropuerto_Llegada_Codigo, m.Vuelo_Fecha_Salida, m.Vuelo_Horario_Salida, m.Vuelo_Fecha_Llegada, m.Vuelo_Horario_Llegada, m.Vuelo_Duracion, m.Vuelo_Precio, ISNULL(m.Vuelo_Incluye_Carry, 0), ISNULL(m.Vuelo_Incluye_Valija, 0)
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Aerolinea ae ON ae.aero_codigo = m.Aerolinea_Codigo
  INNER JOIN LOS_JOINEROS.Aeropuerto aps ON aps.aer_codigo = m.Aeropuerto_Salida_Codigo
@@ -684,7 +686,7 @@ AS
 BEGIN
  SET NOCOUNT ON;
  INSERT INTO LOS_JOINEROS.Tipo_Habitacion (tdh_hospedaje, tdh_descripcion, tdh_cant_camas, tdh_precio_base)
- SELECT DISTINCT h.hos_id, m.Habitacion_Nombre, NULL, m.Habitacion_Precio_Noche
+ SELECT DISTINCT h.hos_id, m.Habitacion_Nombre,m.Habitacion_Descripcion, NULL, m.Habitacion_Precio_Noche
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Hospedaje h ON h.hos_nombre = m.Hospedaje_Nombre
  WHERE m.Habitacion_Nombre IS NOT NULL;
