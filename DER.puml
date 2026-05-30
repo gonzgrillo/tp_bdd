@@ -144,6 +144,7 @@ entity Tipo_Habitacion {
   tdh_hospedaje : int <<FK>>
   tdh_nombre : nvarchar(255)
   tdh_descripcion : nvarchar(max)
+  tdh_cant_camas : int
   tdh_precio_base : decimal(18,2)
 }
 

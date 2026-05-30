@@ -183,7 +183,8 @@ CREATE TABLE LOS_JOINEROS.Tipo_Habitacion (
  tdh_id int IDENTITY(1,1) NOT NULL,
  tdh_hospedaje int NOT NULL,
  tdh_nombre nvarchar(255) NOT NULL,
- tdh_descripcion nvarchar(max) NULL,
+ tdh_descripcion nvarchar(max) NOT NULL,
+ tdh_cant_camas int NULL,
  tdh_precio_base decimal(18,2) NOT NULL,
  CONSTRAINT PK_Tipo_Habitacion PRIMARY KEY (tdh_id),
  CONSTRAINT FK_TipoHabitacion_Hospedaje FOREIGN KEY (tdh_hospedaje) REFERENCES LOS_JOINEROS.Hospedaje (hos_id)
@@ -680,8 +681,8 @@ CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_MIGRACION_TABLA_TIPO_HABITACION
 AS
 BEGIN
  SET NOCOUNT ON;
- INSERT INTO LOS_JOINEROS.Tipo_Habitacion (tdh_hospedaje, tdh_nombre, tdh_descripcion, tdh_precio_base)
- SELECT DISTINCT h.hos_id, m.Habitacion_Nombre, m.Habitacion_Descripcion, m.Habitacion_Precio_Noche
+ INSERT INTO LOS_JOINEROS.Tipo_Habitacion (tdh_hospedaje, tdh_descripcion, tdh_cant_camas, tdh_precio_base)
+ SELECT DISTINCT h.hos_id, m.Habitacion_Nombre,m.Habitacion_Descripcion, NULL, m.Habitacion_Precio_Noche
  FROM gd_esquema.Maestra m
  INNER JOIN LOS_JOINEROS.Hospedaje h ON h.hos_nombre = m.Hospedaje_Nombre
  WHERE m.Habitacion_Nombre IS NOT NULL;
