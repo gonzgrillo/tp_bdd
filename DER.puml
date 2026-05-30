@@ -122,6 +122,7 @@ entity Vuelo {
   vue_fecha_llegada : date
   vue_hora_llegada : nvarchar(50)
   vue_duracion : int
+  vue_precio : decimal(18,2)
   vue_incluye_carry : bit
   vue_incluye_valija : bit
 }
@@ -141,7 +142,8 @@ entity Tipo_Habitacion {
   tdh_id : int <<PK, IDENTITY>>
   --
   tdh_hospedaje : int <<FK>>
-  tdh_descripcion : nvarchar(255)
+  tdh_nombre : nvarchar(255)
+  tdh_descripcion : nvarchar(max)
   tdh_cant_camas : int
   tdh_precio_base : decimal(18,2)
 }
