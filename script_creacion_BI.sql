@@ -4,9 +4,7 @@ GO
 PRINT '=== INICIO CREACION MODELO BI ==='
 GO
 
--- ============================================================
 -- 1. TABLAS DIMENSIONES
--- ============================================================
 
 PRINT 'Creando tablas de dimensiones...'
 GO
@@ -84,9 +82,7 @@ CREATE TABLE LOS_JOINEROS.BI_Dim_Aspecto_Encuesta (
 );
 GO
 
--- ============================================================
 -- 2. TABLAS DE HECHOS
--- ============================================================
 
 PRINT 'Creando tablas de hechos...'
 GO
@@ -159,9 +155,7 @@ CREATE TABLE LOS_JOINEROS.BI_Fact_Encuesta (
 );
 GO
 
--- ============================================================
 -- 3. INDICES
--- ============================================================
 
 PRINT 'Creando índices del modelo BI...'
 GO
@@ -183,14 +177,12 @@ CREATE INDEX IX_BI_FEnc_Agente        ON LOS_JOINEROS.BI_Fact_Encuesta (bfe_agen
 CREATE INDEX IX_BI_FEnc_Aspecto       ON LOS_JOINEROS.BI_Fact_Encuesta (bfe_aspecto);
 GO
 
--- ============================================================
 -- 4. STORED PROCEDURES DE CARGA
--- ============================================================
 
 PRINT 'Creando stored procedures de carga...'
 GO
 
--- ── 4.1 BI_Dim_Tiempo ────────────────────────────────────────
+-- 4.1 BI_Dim_Tiempo
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_TIEMPO
 AS
 BEGIN
@@ -229,7 +221,7 @@ BEGIN
 END;
 GO
 
--- ── 4.2 BI_Dim_Rango_Etario ──────────────────────────────────
+-- 4.2 BI_Dim_Rango_Etario
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_RANGO_ETARIO
 AS
 BEGIN
@@ -243,7 +235,7 @@ BEGIN
 END;
 GO
 
--- ── 4.3 BI_Dim_Tipo_Servicio ─────────────────────────────────
+-- 4.3 BI_Dim_Tipo_Servicio
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_TIPO_SERVICIO
 AS
 BEGIN
@@ -253,7 +245,7 @@ BEGIN
 END;
 GO
 
--- ── 4.4 BI_Dim_Canal_Venta ───────────────────────────────────
+-- 4.4 BI_Dim_Canal_Venta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_CANAL_VENTA
 AS
 BEGIN
@@ -263,7 +255,7 @@ BEGIN
 END;
 GO
 
--- ── 4.5 BI_Dim_Estado_Propuesta ──────────────────────────────
+-- 4.5 BI_Dim_Estado_Propuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_ESTADO_PROPUESTA
 AS
 BEGIN
@@ -273,7 +265,7 @@ BEGIN
 END;
 GO
 
--- ── 4.6 BI_Dim_Agente ────────────────────────────────────────
+-- 4.6 BI_Dim_Agente
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_AGENTE
 AS
 BEGIN
@@ -291,7 +283,7 @@ BEGIN
 END;
 GO
 
--- ── 4.7 BI_Dim_Cliente ───────────────────────────────────────
+-- 4.7 BI_Dim_Cliente
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_CLIENTE
 AS
 BEGIN
@@ -309,7 +301,7 @@ BEGIN
 END;
 GO
 
--- ── 4.8 BI_Dim_Aspecto_Encuesta ──────────────────────────────
+-- 4.8 BI_Dim_Aspecto_Encuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_ASPECTO_ENCUESTA
 AS
 BEGIN
@@ -319,7 +311,7 @@ BEGIN
 END;
 GO
 
--- ── 4.9 BI_Fact_Venta ────────────────────────────────────────
+-- 4.9 BI_Fact_Venta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_VENTA
 AS
 BEGIN
@@ -348,7 +340,7 @@ BEGIN
 END;
 GO
 
--- ── 4.10 BI_Fact_Solicitud ───────────────────────────────────
+-- 4.10 BI_Fact_Solicitud
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_SOLICITUD
 AS
 BEGIN
@@ -374,7 +366,7 @@ BEGIN
 END;
 GO
 
--- ── 4.11 BI_Fact_Propuesta ───────────────────────────────────
+-- 4.11 BI_Fact_Propuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_PROPUESTA
 AS
 BEGIN
@@ -406,7 +398,7 @@ BEGIN
 END;
 GO
 
--- ── 4.12 BI_Fact_Encuesta ────────────────────────────────────
+-- 4.12 BI_Fact_Encuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_ENCUESTA
 AS
 BEGIN
@@ -427,9 +419,7 @@ BEGIN
 END;
 GO
 
--- ============================================================
 -- 5. EJECUCION DE CARGA EN ORDEN
--- ============================================================
 
 PRINT 'Cargando dimensiones...'
 GO
@@ -453,14 +443,12 @@ EXEC LOS_JOINEROS.P_BI_CARGA_FACT_PROPUESTA;
 EXEC LOS_JOINEROS.P_BI_CARGA_FACT_ENCUESTA;
 GO
 
--- ============================================================
 -- 6. VISTAS PARA LOS 10 INDICADORES DE NEGOCIO
--- ============================================================
 
 PRINT 'Creando vistas de indicadores...'
 GO
 
--- ── Indicador 1: Ticket promedio mensual por rango etario cliente y canal de venta
+-- Indicador 1: Ticket promedio mensual por rango etario cliente y canal de venta
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Ticket_Promedio_Mensual AS
 SELECT
     t.bit_anio                  AS anio,
@@ -478,7 +466,7 @@ INNER JOIN LOS_JOINEROS.BI_Dim_Canal_Venta   cv ON cv.bicv_id = v.bfv_canal_vent
 GROUP BY t.bit_anio, t.bit_mes, r.bire_descripcion, cv.bicv_descripcion;
 GO
 
--- ── Indicador 2: Distribución de facturación por tipo de servicio y cuatrimestre
+-- Indicador 2: Distribución de facturación por tipo de servicio y cuatrimestre
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Distribucion_Facturacion AS
 SELECT
     t.bit_anio                                                          AS anio,
@@ -493,7 +481,7 @@ INNER JOIN LOS_JOINEROS.BI_Dim_Tipo_Servicio  ts ON ts.bits_id = v.bfv_tipo_serv
 GROUP BY t.bit_anio, t.bit_cuatrimestre, ts.bits_descripcion;
 GO
 
--- ── Indicador 3: Ranking de solicitudes por temporada y rango etario cliente
+-- Indicador 3: Ranking de solicitudes por temporada y rango etario cliente
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Ranking_Solicitudes_Temporada AS
 SELECT
     t.bit_anio                  AS anio,
@@ -511,7 +499,7 @@ INNER JOIN LOS_JOINEROS.BI_Dim_Rango_Etario  r ON r.bire_id = c.bic_rango_etario
 GROUP BY t.bit_anio, t.bit_temporada, r.bire_descripcion;
 GO
 
--- ── Indicador 4: Anticipación promedio de solicitudes por rango etario cliente y cuatrimestre
+-- Indicador 4: Anticipación promedio de solicitudes por rango etario cliente y cuatrimestre
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Anticipacion_Solicitudes AS
 SELECT
     t.bit_anio                          AS anio,
@@ -527,7 +515,7 @@ WHERE s.bfs_dias_anticipacion IS NOT NULL
 GROUP BY t.bit_anio, t.bit_cuatrimestre, r.bire_descripcion;
 GO
 
--- ── Indicador 5: Tasa de aceptación de propuestas por cuatrimestre
+-- Indicador 5: Tasa de aceptación de propuestas por cuatrimestre
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Tasa_Aceptacion_Propuestas AS
 SELECT
     t.bit_anio                                              AS anio,
@@ -542,7 +530,7 @@ INNER JOIN LOS_JOINEROS.BI_Dim_Estado_Propuesta  ep ON ep.biep_id = p.bfp_estado
 GROUP BY t.bit_anio, t.bit_cuatrimestre;
 GO
 
--- ── Indicador 6: Cotización promedio por temporada y año (fecha inicio viaje)
+-- Indicador 6: Cotización promedio por temporada y año (fecha inicio viaje)
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Cotizacion_Promedio_Temporada AS
 SELECT
     tv.bit_anio                         AS anio,
@@ -557,7 +545,7 @@ WHERE p.bfp_tiempo_viaje IS NOT NULL
 GROUP BY tv.bit_anio, tv.bit_temporada;
 GO
 
--- ── Indicador 7: Tiempo promedio de respuesta por rango etario agente y mes
+-- Indicador 7: Tiempo promedio de respuesta por rango etario agente y mes
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Tiempo_Respuesta_Agente AS
 SELECT
     ts.bit_anio                                     AS anio,
@@ -573,7 +561,7 @@ WHERE p.bfp_dias_respuesta IS NOT NULL
 GROUP BY ts.bit_anio, ts.bit_mes, r.bire_descripcion;
 GO
 
--- ── Indicador 8: Desvío de presupuesto promedio
+-- Indicador 8: Desvío de presupuesto promedio
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Desvio_Presupuesto AS
 SELECT
     t.bit_anio                                          AS anio,
@@ -591,7 +579,7 @@ WHERE p.bfp_presupuesto_estimado IS NOT NULL
 GROUP BY t.bit_anio, t.bit_cuatrimestre;
 GO
 
--- ── Indicador 9: Ranking de aspectos mejor y peor valorados por cuatrimestre
+-- Indicador 9: Ranking de aspectos mejor y peor valorados por cuatrimestre
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Ranking_Aspectos_Encuesta AS
 SELECT
     t.bit_anio                              AS anio,
@@ -613,7 +601,7 @@ INNER JOIN LOS_JOINEROS.BI_Dim_Aspecto_Encuesta  asp ON asp.biae_id = e.bfe_aspe
 GROUP BY t.bit_anio, t.bit_cuatrimestre, asp.biae_descripcion;
 GO
 
--- ── Indicador 10: Satisfacción promedio por agente, rango etario agente y mes
+-- Indicador 10: Satisfacción promedio por agente, rango etario agente y mes
 CREATE OR ALTER VIEW LOS_JOINEROS.BI_V_Satisfaccion_Por_Agente AS
 SELECT
     t.bit_anio                              AS anio,
