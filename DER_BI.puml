@@ -1,0 +1,146 @@
+@startuml
+!theme toy
+hide circle
+skinparam linetype ortho
+
+' ─── DIMENSIONES ─────────────────────────────────────────────
+
+entity BI_Dim_Tiempo {
+  bit_id : int <<PK>>
+  --
+  bit_fecha : date
+  bit_anio : int
+  bit_cuatrimestre : int
+  bit_mes : int
+  bit_temporada : nvarchar(50)
+}
+
+entity BI_Dim_Rango_Etario {
+  bire_id : int <<PK>>
+  --
+  bire_descripcion : nvarchar(100)
+  bire_edad_desde : int
+  bire_edad_hasta : int
+}
+
+entity BI_Dim_Tipo_Servicio {
+  bits_id : int <<PK>>
+  --
+  bits_descripcion : nvarchar(100)
+}
+
+entity BI_Dim_Canal_Venta {
+  bicv_id : int <<PK>>
+  --
+  bicv_descripcion : nvarchar(255)
+}
+
+entity BI_Dim_Estado_Propuesta {
+  biep_id : int <<PK>>
+  --
+  biep_descripcion : nvarchar(255)
+}
+
+entity BI_Dim_Agente {
+  bia_id : int <<PK>>
+  --
+  bia_legajo : bigint
+  bia_nombre : nvarchar(255)
+  bia_apellido : nvarchar(255)
+  bia_rango_etario : int <<FK>>
+}
+
+entity BI_Dim_Cliente {
+  bic_id : int <<PK>>
+  --
+  bic_cliente_id : int
+  bic_nombre : nvarchar(255)
+  bic_apellido : nvarchar(255)
+  bic_rango_etario : int <<FK>>
+}
+
+entity BI_Dim_Aspecto_Encuesta {
+  biae_id : int <<PK>>
+  --
+  biae_descripcion : nvarchar(255)
+}
+
+' ─── HECHOS ──────────────────────────────────────────────────
+
+entity BI_Fact_Venta {
+  bfv_id : int <<PK>>
+  --
+  bfv_tiempo : int <<FK>>
+  bfv_cliente : int <<FK>>
+  bfv_agente : int <<FK>>
+  bfv_canal_venta : int <<FK>>
+  bfv_tipo_servicio : int <<FK>>
+  bfv_total : decimal(18,2)
+  bfv_subtotal : decimal(18,2)
+  bfv_descuento : decimal(18,2)
+}
+
+entity BI_Fact_Solicitud {
+  bfs_id : int <<PK>>
+  --
+  bfs_tiempo_solicitud : int <<FK>>
+  bfs_cliente : int <<FK>>
+  bfs_agente : int <<FK>>
+  bfs_dias_anticipacion : int
+  bfs_presupuesto_estimado : decimal(18,2)
+  bfs_cant_pasajeros : int
+}
+
+entity BI_Fact_Propuesta {
+  bfp_id : int <<PK>>
+  --
+  bfp_tiempo_emision : int <<FK>>
+  bfp_tiempo_viaje : int <<FK>>
+  bfp_tiempo_solicitud : int <<FK>>
+  bfp_agente : int <<FK>>
+  bfp_estado_propuesta : int <<FK>>
+  bfp_dias_respuesta : int
+  bfp_importe_total : decimal(18,2)
+  bfp_descuento : decimal(18,2)
+  bfp_presupuesto_estimado : decimal(18,2)
+  bfp_desvio_presupuesto : decimal(18,2)
+}
+
+entity BI_Fact_Encuesta {
+  bfe_id : int <<PK>>
+  --
+  bfe_tiempo : int <<FK>>
+  bfe_agente : int <<FK>>
+  bfe_aspecto : int <<FK>>
+  bfe_puntaje : int
+}
+
+' ─── RELACIONES ──────────────────────────────────────────────
+
+' Rango etario -> dimensiones de persona
+BI_Dim_Rango_Etario ||--o{ BI_Dim_Agente
+BI_Dim_Rango_Etario ||--o{ BI_Dim_Cliente
+
+' BI_Fact_Venta
+BI_Dim_Tiempo ||--o{ BI_Fact_Venta
+BI_Dim_Cliente ||--o{ BI_Fact_Venta
+BI_Dim_Agente ||--o{ BI_Fact_Venta
+BI_Dim_Canal_Venta ||--o{ BI_Fact_Venta
+BI_Dim_Tipo_Servicio ||--o{ BI_Fact_Venta
+
+' BI_Fact_Solicitud
+BI_Dim_Tiempo ||--o{ BI_Fact_Solicitud
+BI_Dim_Cliente ||--o{ BI_Fact_Solicitud
+BI_Dim_Agente ||--o{ BI_Fact_Solicitud
+
+' BI_Fact_Propuesta (3 FKs a Tiempo: emision, viaje, solicitud)
+BI_Dim_Tiempo ||--o{ BI_Fact_Propuesta
+BI_Dim_Agente ||--o{ BI_Fact_Propuesta
+BI_Dim_Estado_Propuesta ||--o{ BI_Fact_Propuesta
+
+' BI_Fact_Encuesta
+BI_Dim_Tiempo ||--o{ BI_Fact_Encuesta
+BI_Dim_Agente ||--o{ BI_Fact_Encuesta
+BI_Dim_Aspecto_Encuesta ||--o{ BI_Fact_Encuesta
+
+@enduml
