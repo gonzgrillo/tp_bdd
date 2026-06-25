@@ -230,7 +230,7 @@ BEGIN
     VALUES
         ('Menores de 25 anos',    0,  24),
         ('Entre 25 y 35 anos',   25,  35),
-        ('Entre 35 y 50 anos',   35,  50),
+        ('Entre 35 y 50 anos',   36,  50),
         ('Mayores de 50 anos',   51, 999);
 END;
 GO
