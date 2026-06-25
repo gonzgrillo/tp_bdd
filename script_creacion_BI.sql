@@ -4,7 +4,7 @@ GO
 PRINT '=== INICIO CREACION MODELO BI ==='
 GO
 
--- 1. TABLAS DIMENSIONES
+-- TABLAS DE DIMENSIONES
 
 PRINT 'Creando tablas de dimensiones...'
 GO
@@ -82,7 +82,7 @@ CREATE TABLE LOS_JOINEROS.BI_Dim_Aspecto_Encuesta (
 );
 GO
 
--- 2. TABLAS DE HECHOS
+-- TABLAS DE HECHOS
 
 PRINT 'Creando tablas de hechos...'
 GO
@@ -155,38 +155,16 @@ CREATE TABLE LOS_JOINEROS.BI_Fact_Encuesta (
 );
 GO
 
--- 3. INDICES
-
-PRINT 'Creando índices del modelo BI...'
-GO
-
-CREATE INDEX IX_BI_FVenta_Tiempo      ON LOS_JOINEROS.BI_Fact_Venta (bfv_tiempo);
-CREATE INDEX IX_BI_FVenta_Cliente     ON LOS_JOINEROS.BI_Fact_Venta (bfv_cliente);
-CREATE INDEX IX_BI_FVenta_Agente      ON LOS_JOINEROS.BI_Fact_Venta (bfv_agente);
-CREATE INDEX IX_BI_FVenta_Canal       ON LOS_JOINEROS.BI_Fact_Venta (bfv_canal_venta);
-CREATE INDEX IX_BI_FVenta_TipoServ    ON LOS_JOINEROS.BI_Fact_Venta (bfv_tipo_servicio);
-CREATE INDEX IX_BI_FSol_Tiempo        ON LOS_JOINEROS.BI_Fact_Solicitud (bfs_tiempo_solicitud);
-CREATE INDEX IX_BI_FSol_Cliente       ON LOS_JOINEROS.BI_Fact_Solicitud (bfs_cliente);
-CREATE INDEX IX_BI_FSol_Agente        ON LOS_JOINEROS.BI_Fact_Solicitud (bfs_agente);
-CREATE INDEX IX_BI_FProp_TiempoEmis   ON LOS_JOINEROS.BI_Fact_Propuesta (bfp_tiempo_emision);
-CREATE INDEX IX_BI_FProp_TiempoViaje  ON LOS_JOINEROS.BI_Fact_Propuesta (bfp_tiempo_viaje);
-CREATE INDEX IX_BI_FProp_Agente       ON LOS_JOINEROS.BI_Fact_Propuesta (bfp_agente);
-CREATE INDEX IX_BI_FProp_Estado       ON LOS_JOINEROS.BI_Fact_Propuesta (bfp_estado_propuesta);
-CREATE INDEX IX_BI_FEnc_Tiempo        ON LOS_JOINEROS.BI_Fact_Encuesta (bfe_tiempo);
-CREATE INDEX IX_BI_FEnc_Agente        ON LOS_JOINEROS.BI_Fact_Encuesta (bfe_agente);
-CREATE INDEX IX_BI_FEnc_Aspecto       ON LOS_JOINEROS.BI_Fact_Encuesta (bfe_aspecto);
-GO
-
--- 4. STORED PROCEDURES DE CARGA
+-- CARGAMOS LAS DIMENSIONES Y HECHOS
 
 PRINT 'Creando stored procedures de carga...'
 GO
 
--- 4.1 BI_Dim_Tiempo
+-- BI_Dim_Tiempo
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_TIEMPO
 AS
 BEGIN
-    SET NOCOUNT ON;
+    SET NOCOUNT ON; --para no llenar de mensajes de rows affected
     -- Genera un registro por cada fecha distinta que aparece en los datos transaccionales
     INSERT INTO LOS_JOINEROS.BI_Dim_Tiempo (bit_fecha, bit_anio, bit_cuatrimestre, bit_mes, bit_temporada)
     SELECT DISTINCT
@@ -221,21 +199,21 @@ BEGIN
 END;
 GO
 
--- 4.2 BI_Dim_Rango_Etario
+-- BI_Dim_Rango_Etario
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_RANGO_ETARIO
 AS
 BEGIN
     SET NOCOUNT ON;
     INSERT INTO LOS_JOINEROS.BI_Dim_Rango_Etario (bire_descripcion, bire_edad_desde, bire_edad_hasta)
     VALUES
-        ('Menores de 25 anos',    0,  24),
-        ('Entre 25 y 35 anos',   25,  35),
-        ('Entre 35 y 50 anos',   36,  50),
-        ('Mayores de 50 anos',   51, 999);
+        ('Menores de 25 anios',    0,  24),
+        ('Entre 25 y 35 anios',   25,  35),
+        ('Entre 35 y 50 anios',   36,  50),
+        ('Mayores de 50 anios',   51, 999);
 END;
 GO
 
--- 4.3 BI_Dim_Tipo_Servicio
+-- BI_Dim_Tipo_Servicio
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_TIPO_SERVICIO
 AS
 BEGIN
@@ -245,7 +223,7 @@ BEGIN
 END;
 GO
 
--- 4.4 BI_Dim_Canal_Venta
+-- BI_Dim_Canal_Venta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_CANAL_VENTA
 AS
 BEGIN
@@ -255,7 +233,7 @@ BEGIN
 END;
 GO
 
--- 4.5 BI_Dim_Estado_Propuesta
+-- BI_Dim_Estado_Propuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_ESTADO_PROPUESTA
 AS
 BEGIN
@@ -265,7 +243,7 @@ BEGIN
 END;
 GO
 
--- 4.6 BI_Dim_Agente
+-- BI_Dim_Agente
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_AGENTE
 AS
 BEGIN
@@ -283,7 +261,7 @@ BEGIN
 END;
 GO
 
--- 4.7 BI_Dim_Cliente
+-- BI_Dim_Cliente
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_CLIENTE
 AS
 BEGIN
@@ -301,7 +279,7 @@ BEGIN
 END;
 GO
 
--- 4.8 BI_Dim_Aspecto_Encuesta
+-- BI_Dim_Aspecto_Encuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_DIM_ASPECTO_ENCUESTA
 AS
 BEGIN
@@ -311,7 +289,7 @@ BEGIN
 END;
 GO
 
--- 4.9 BI_Fact_Venta
+-- BI_Fact_Venta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_VENTA
 AS
 BEGIN
@@ -340,7 +318,7 @@ BEGIN
 END;
 GO
 
--- 4.10 BI_Fact_Solicitud
+-- BI_Fact_Solicitud
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_SOLICITUD
 AS
 BEGIN
@@ -366,7 +344,7 @@ BEGIN
 END;
 GO
 
--- 4.11 BI_Fact_Propuesta
+--  BI_Fact_Propuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_PROPUESTA
 AS
 BEGIN
@@ -398,7 +376,7 @@ BEGIN
 END;
 GO
 
--- 4.12 BI_Fact_Encuesta
+-- BI_Fact_Encuesta
 CREATE OR ALTER PROCEDURE LOS_JOINEROS.P_BI_CARGA_FACT_ENCUESTA
 AS
 BEGIN
@@ -419,7 +397,7 @@ BEGIN
 END;
 GO
 
--- 5. EJECUCION DE CARGA EN ORDEN
+-- EJECUCION DE CARGA EN ORDEN
 
 PRINT 'Cargando dimensiones...'
 GO
@@ -443,7 +421,7 @@ EXEC LOS_JOINEROS.P_BI_CARGA_FACT_PROPUESTA;
 EXEC LOS_JOINEROS.P_BI_CARGA_FACT_ENCUESTA;
 GO
 
--- 6. VISTAS PARA LOS 10 INDICADORES DE NEGOCIO
+-- VISTAS PARA LOS 10 INDICADORES DE NEGOCIO
 
 PRINT 'Creando vistas de indicadores...'
 GO
